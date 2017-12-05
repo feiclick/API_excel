@@ -3,6 +3,17 @@ http://blog.csdn.net/dapengbusi/article/details/38118679
 
 https://www.yuanmas.com/info/nmaWl1AWy3.html 
 
+Read Excel as DataTable using OpenXML and C#
+good: https://dotnetthoughts.net/read-excel-as-datatable-using-openxml-and-c/
+
+good: https://social.technet.microsoft.com/wiki/contents/articles/35010.read-excel-files-using-open-xml-sdk-in-asp-net-c.aspx
+
+
+convert excel to csv file: 
+https://stackoverflow.com/questions/38577722/reading-excel-files-using-openxml
+
+https://stackoverflow.com/questions/23102010/open-xml-reading-from-excel-file 
+
 Microsoft: 
 https://msdn.microsoft.com/zh-cn/library/office/ff921204(v=office.14).aspx
 
