@@ -1,0 +1,61 @@
+ public class CeiExtractDataPackage
+    {
+        public Guid ApiKey { get; set; }
+        public Guid UserId { get; set; }
+        public FileType FileType { get; set; }
+        public CeiSearchParam SearchParam { get; set; }
+    }
+	
+  //CEI report - 3 filters
+        public static HttpResponseMessage GenerateCEIReport()
+	    {
+            var ceiExtractDataPackage = new CeiExtractDataPackage
+            {
+                ApiKey = new Guid("......"),
+                FileType = FileType.Excel,
+                SearchParam = new CeiSearchParam
+                {
+                    Filters = new List<SearchFilter>
+                    {
+                        new SearchFilter
+                        {
+                            Name = "ReportStartDate",
+                            DisplayName = "Report Start Date",
+                            SelectedValues = new List<string>
+                            {
+                                "12/05/2017"
+                            },
+                            Values = new object[] {new DateTime(2017, 12, 5, 12, 0, 0, DateTimeKind.Utc)},
+                            Operator = SearchFilterOperator.GreaterThanOrEqual
+                        },
+
+                        new SearchFilter
+                        {
+                            Name = "ReportEndDate",
+                            DisplayName = "Report End Date",
+                            SelectedValues = new List<string>
+                            {
+                                "12/05/2017"
+                            },
+                            Values = new object[] {new DateTime(2017, 12, 5, 12, 10, 0, DateTimeKind.Utc)},
+                            Operator = SearchFilterOperator.GreaterThanOrEqual
+
+                        },
+
+                        new SearchFilter
+                        {
+                            Name = "ServiceComponent",
+                            DisplayName = "Service Component",
+                            SelectedValues = new List<string>
+                            {
+                                "Banana component"
+                            },
+                            Values = new object[] {new Guid(".....") },
+                            Operator = SearchFilterOperator.Equal
+                        },
+                    }
+                }
+            };
+
+            return GenerateCEIReport();
+        }
