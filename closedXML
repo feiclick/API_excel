@@ -1,3 +1,54 @@
+count rows:
+int RowCount = workSheet.Rows().Count();
+
+//
+1.读xlsx文件
+
+首先 using ClosedXML.Excel;
+
+然后
+
+ using (XLWorkbook wb = new XLWorkbook(@"E:\JOB\1.xlsx"))
+ {
+IXLWorksheet ws = wb.Worksheets.First();//获得第一个Sheet。
+
+//通过Worksheet(int position);函数获得sheet,position从1开始。
+
+//不能使用ws.RowCount();获得很大的值。
+
+//遍历所有可使用的行
+
+var rows = ws.RowsUsed()
+
+        foreach (var row in rows)
+
+{
+
+//取得cell的值
+
+string temps = row.Cell(columnIndex).GetString();//columnIndex列索引值从1开始
+
+
+//遍历所有的Cells
+
+foreach(var cell in row.Cells())
+
+{
+
+string tempst = cell.Value.ToString();
+
+}
+
+}
+
+//一般情况下读的时候会过滤行，最常见的过滤掉首行因为他是标题。
+
+var rows = ws.RowsUsed().Skip(1);//1是过滤掉行数,返回的结果是行的集合
+
+var row = ws.RowsUsed().First().RowBelow(2);//2是过滤掉的函数。返回的结果是单行。他返回第三行
+
+}
+//////
 read csv
 https://github.com/ClosedXML/ClosedXML/wiki/Finding-and-extracting-the-data
 
