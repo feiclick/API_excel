@@ -1,0 +1,87 @@
+
+              
+        //CEI report - 3 filters
+        public static HttpResponseMessage GenerateCEIReport(string startDate,string endDate,string serviceComponent)
+	    {
+            var ceiExtractDataPackage = new CeiExtractDataPackage
+            {
+                ApiKey = new Guid("19db64da-851b-4d72-abf6-08a21a78dd58"),
+                FileType = FileType.Excel,
+                SearchParam = new CeiSearchParam
+                {
+                    Filters = new List<SearchFilter>
+                    {
+                        new SearchFilter
+                        {
+                            Name = "ReportStartDate",
+                            DisplayName = "Report Start Date",
+                            SelectedValues = new List<string>
+                            {
+                                startDate
+                            },
+                            Values = new object[] {new DateTime(2017, 12, 5, 12, 0, 0, DateTimeKind.Utc)},
+                            Operator = SearchFilterOperator.GreaterThanOrEqual
+                        },
+
+                        new SearchFilter
+                        {
+                            Name = "ReportEndDate",
+                            DisplayName = "Report End Date",
+                            SelectedValues = new List<string>
+                            {
+                                endDate
+                            },
+                            Values = new object[] {new DateTime(2017, 12, 5, 12, 10, 0, DateTimeKind.Utc)},
+                            Operator = SearchFilterOperator.LessThanOrEqual
+
+                        },
+
+                        new SearchFilter
+                        {
+                            Name = "ServiceComponent",
+                            DisplayName = "Service Component",
+                            SelectedValues = new List<string>
+                            {
+                                serviceComponent
+                            },
+                            Values = new object[] {new Guid("3f243d4b-3ad6-454e-bba0-e77d9624edac") },
+                            Operator = SearchFilterOperator.Equal
+                        },
+                    }
+                }
+            };
+
+            return GenerateCEIReport(startDate,endDate, serviceComponent);
+        }
+        
+        
+        //////////// test case ///////
+        
+        [TestMethod]
+        public void GenerateCEIReport_successfully()
+        {
+            string startDate = "\"12/07/2017\"";
+            string endDate = "\"12/07/2017\"";
+            string serviceComponent = "Air Force Reserve";
+
+            restRequest.RequestFormat = DataFormat.Json;
+
+            var ceiReport = GenerateCEIReport(startDate, endDate, serviceComponent);
+            var json = getRequest.JsonSerializer.Serialize(ceiReport);
+            restRequest.AddParameter("application/json; charset=utf-8", json, ParameterType.RequestBody);
+
+            restClient.Execute(restRequest);
+            byte[] response = restClient.DownloadData(restRequest);
+            File.WriteAllBytes(downLoadPath + "\\CEI_Extract_[MMDDYYYY_HHMMSSMS].xslx", response);//file name
+
+            //retriving data from cell
+            const string fileName = @"E:\CEI\CEI_Report\CEI_API_Test.xlsx";
+
+            // Retrieve the value in cell A1.
+            string value1 = GetDatafromExcel.GetCellValue(fileName, "Sheet1", "A1");
+
+            //assert
+
+            Assert.AreEqual("Validate Validation messages", value1);                   
+         
+        }
