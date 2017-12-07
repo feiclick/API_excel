@@ -53,7 +53,7 @@ read csv
 https://github.com/ClosedXML/ClosedXML/wiki/Finding-and-extracting-the-data
 
 https://github.com/ClosedXML/ClosedXML/blob/c0fabd50d1657bb43183a204d43ae06be51bb31c/ClosedXML/Excel/Cells/XLCell.cs
-
+http://blog.csdn.net/hustqter/article/details/50073767 
 
 ////https://github.com/ClosedXML/ClosedXML/wiki/Cell-Values//
 var workbook = new XLWorkbook();
