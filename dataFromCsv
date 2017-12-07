@@ -1,0 +1,34 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ASI.CEI.APITests
+{
+    public class GetValuefromCsv
+    {
+// convert to array => compare??
+        public static List<String[]> ReadCsv(string filePathName)
+        {
+            List<String[]> ls = new List<String[]>();
+            StreamReader fileReader = new StreamReader(filePathName);
+            string strLine = "";
+            while (strLine != null)
+            {
+                strLine = fileReader.ReadLine();
+                if (!string.IsNullOrEmpty(strLine))
+                {
+                    ls.Add(strLine.Split(','));
+
+                    //Debug.WriteLine(strLine);
+                }
+            }
+            fileReader.Close();
+            return ls;
+
+        }
+
+    }
+}
