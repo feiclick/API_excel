@@ -1,0 +1,123 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+
+namespace ASI.CEI.APITests
+{
+    public class GetDatafromExcel
+    {
+        public static string GetCellValue(string fileName, string sheetName, string addressName)
+        {
+            string value = null;
+
+            // Open the excel
+            using (var document = SpreadsheetDocument.Open(fileName, false))
+            {
+                // Retrieve a reference to the workbook part.
+                var wbPart = document.WorkbookPart;
+
+                // Find the sheet with the supplied name           
+                var theSheet = wbPart.Workbook.Descendants<Sheet>().FirstOrDefault(s => s.Name == sheetName);
+
+                // Throw an exception if there is no sheet.
+                if (theSheet == null)
+                {
+                    throw new ArgumentException("sheetName");
+                }
+
+                // Retrieve a reference to the worksheet part.
+                var wsPart = (WorksheetPart)(wbPart.GetPartById(theSheet.Id));
+
+                // get the cell
+                var theCell = wsPart.Worksheet.Descendants<Cell>().FirstOrDefault(c => c.CellReference == addressName);
+
+                // If the cell does not exist, return an empty string.
+                if (theCell != null)
+                {
+                    value = theCell.InnerText;
+
+                    // If the cell represents an integer number, you are done. 
+
+                    // For dates, this code returns the serialized value that 
+                    // represents the date. The code handles strings and 
+                    // Booleans individually. For shared strings, the code 
+                    // looks up the corresponding value in the shared string 
+                    // table. For Booleans, the code converts the value into 
+                    // the words TRUE or FALSE.
+                  
+                  
+                  //Date 
+                    if (theCell.DataType != null)
+                    {
+                        switch (theCell.DataType.Value)
+                        {
+                            case CellValues.SharedString:
+
+                                // For shared strings, look up the value in the shared strings table.
+                                var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+
+                                if (stringTable != null)
+                                {
+                                    value = stringTable.SharedStringTable.ElementAt(int.Parse(value)).InnerText;
+                                }
+                                break;
+
+                                /*
+                            case CellValues.Boolean:
+                                switch (value)
+                                {
+                                    case "0":
+                                        value = "FALSE";
+                                        break;
+                                    default:
+                                        value = "TRUE";
+                                        break;
+                                }
+                                break;
+                                */
+                        }
+                    }
+
+                }
+            }
+            return value;
+        }
+
+    }
+}
+
+
+///////////call the method///
+
+        [TestMethod]
+        public void readExcelFile()
+        {
+            const string fileName = @"E:\CEI\CEI_Report\CEI_Extract_20171110_104517.xlsx";
+
+            // Retrieve the value in cell A1.
+            string serviceComponent = GetDatafromExcel.GetCellValue(fileName, "Sheet1", "A1");
+            string startDate = GetDatafromExcel.GetCellValue(fileName, "Sheet1", "A2");
+            string endDate = GetDatafromExcel.GetCellValue(fileName, "Sheet1", "A3");
+            string extractedDate = GetDatafromExcel.GetCellValue(fileName, "Sheet1", "A4");
+            string dmdcDateH = GetDatafromExcel.GetCellValue(fileName, "Sheet1", "A5");
+
+            var dmdcDate1 = GetDatafromExcel.GetCellValue(fileName, "Sheet1", "A6");
+            string dmdcDatevalue = DateTime.FromOADate(double.Parse(dmdcDate1)).ToShortDateString();
+
+            string dodId = GetDatafromExcel.GetCellValue(fileName, "Sheet1", "C6");
+
+            string t6ZipValue = GetDatafromExcel.GetCellValue(fileName, "Sheet1", "T6");
+
+            //assert
+            Assert.AreEqual("Service Component: Air Force Reserve", serviceComponent);
+            Assert.AreEqual("Report Start Date: 11/03/2017", startDate);
+            Assert.AreEqual("Report End Date: 11/03/2017", endDate);
+            Assert.AreEqual("Date Extracted: 11/10/2017 10:45:17", extractedDate);//variable element
+            Assert.AreEqual("Date Sent to DMDC", dmdcDateH);
+            Assert.AreEqual("2017-11-03", dmdcDatevalue);
+            Assert.AreEqual("0001044190", dodId);
+            Assert.AreEqual(null, t6ZipValue);     
