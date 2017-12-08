@@ -1,0 +1,28 @@
+//good examples///
+
+https://stackoverflow.com/questions/1375410/very-simple-c-sharp-csv-reader
+
+https://www.codeproject.com/Questions/384247/How-to-read-from-csv-file-using-csharp-net
+
+https://stackoverflow.com/questions/5282999/reading-csv-file-and-storing-values-into-an-array
+
+
+https://stackoverflow.com/questions/1405038/reading-a-csv-file-in-net/
+
+
+
+https://www.cnblogs.com/blackbean/archive/2011/02/19/1958525.html
+////
+
+using (FileStream fs = new FileStream("data.csv", FileMode.Open, FileAccess.Read))
+            {
+                using (StreamReader reader = new StreamReader(fs))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        string strReadInfo = reader.ReadLine();
+                        string[] array = strReadInfo.Split(',');
+                        Console.WriteLine(strReadInfo);
+                    }
+                }
+            }
