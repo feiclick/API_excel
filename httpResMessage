@@ -1,0 +1,16 @@
+public HttpResponseMessage Get()
+ {
+        var data = _userServices.GetUsers();
+        return Request.CreateResponse(HttpStatusCode.OK, data);
+ }
+
+public async Task<HttpResponseMessage> Get()
+{
+        var data = _userServices.GetUsers();
+
+
+        return await Task<HttpResponseMessage>.Factory.StartNew(() =>
+        {
+           return Request.CreateResponse(HttpStatusCode.OK, data);
+        });
+ }
