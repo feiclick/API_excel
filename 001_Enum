@@ -40,3 +40,52 @@ public static FileType GetFileType(string filetype)
             model.SearchParam = GetSearch(startDate, endDate, serviceComponent, startYy, startMm, strtDd, startHr, startMn, startMs, endYy, endMm, endDd, endHr, endMn, endMs);
 	        return model;
          
+	 /////////
+	         [TestMethod]
+        public void GenerateCEIReport_successfully()
+        {
+            string startDate = "\"12/11/2017\"";
+            string endDate = "\"12/11/2017\"";
+            string serviceComponent = "ABCD";
+           
+            int startYy = 2017;
+            int startMm = 12;
+            int strtDd = 11;
+            int startHr = 8;
+            int startMn = 0;
+            int startMs = 0;
+            int endYy = 2017;
+            int endMm = 12;
+            int endDd = 11;
+            int endHr = 16;
+            int endMn = 10;
+            int endMs = 0;
+
+            //string filepath = downLoadPath + "\\CEI_Extract_[MMDDYYYY_HHMMSSMS].xslx";
+
+            string filepath = downLoadPath + "CEI_Extract_" + DateTime.Now.ToString("MM/dd/yyyy_hhmmssms") + ".xlsx";
+
+            restRequestReport.RequestFormat = DataFormat.Json;
+
+            var ceiReport = GetCeiExcelReport(startDate, endDate, serviceComponent, startYy, startMm,strtDd,startHr,startMn, startMs, endYy, endMm, endDd,endHr, endMn,endMs);
+            var json = restRequestReport.JsonSerializer.Serialize(ceiReport);
+            restRequestReport.AddParameter("application/json; charset=utf-8", json, ParameterType.RequestBody);
+
+            restClient.Execute(restRequestReport);
+            byte[] response = restClient.DownloadData(restRequestReport);
+            
+            File.WriteAllBytes(filepath, response);//file name
+         
+
+            //retriving data from cell
+           // const string fileName = @"E:\CEI\CEI_Report\CEI_API_Test.xlsx";
+
+            // Retrieve the value in cell A1.
+            string value1 = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "A1");
+
+            //assert
+
+            Assert.AreEqual("Report Start Date: \"12/11/2017\"", value1);                   
+         
+        }
+
