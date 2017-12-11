@@ -1,0 +1,42 @@
+Enume + clean up the file folder after tests
+
+////file type
+           public enum FileType
+    {
+        Text,
+        Excel,
+        Csv,
+    }
+ 
+ ////
+   
+public static FileType GetFileType(string filetype)
+	    {
+	      //  string filetype = Enum.GetName(typeof(FileType), FileType.Excel);	       
+            
+        Enum filetype0 = FileType.Text;
+        Enum filetype1 = FileType.Excel;
+        Enum filetype2 = FileType.Csv;
+        
+	        return filetype.ToString();
+	    }*/	 
+  /////////////
+
+
+
+
+/////////generate file:
+
+ public static CeiExtractDataPackage GetCeiExcelReport(string startDate, string endDate, string serviceComponent, int startYy, int startMm, int strtDd, int startHr, int startMn, int startMs, int endYy, int endMm, int endDd, int endHr, int endMn, int endMs)
+	    {
+	        var model = GetCeiReportModel();
+            model.FileType = FileType.Excel;
+
+	       // excelfile = FileType.Excel.ToString();
+
+	        // csvfile = model.FileType = FileType.Csv;
+            //model.FileType = GetFileType();
+
+            model.SearchParam = GetSearch(startDate, endDate, serviceComponent, startYy, startMm, strtDd, startHr, startMn, startMs, endYy, endMm, endDd, endHr, endMn, endMs);
+	        return model;
+         
