@@ -1,0 +1,12 @@
+https://www.codeproject.com/Articles/1165536/Unit-Test-Initialization-and-Cleanup
+https://blogs.msdn.microsoft.com/ploeh/2007/01/06/classcleanup-may-run-later-than-you-think/
+http://www.c-sharpcorner.com/UploadFile/dacca2/test-initialize-and-test-setup/
+
+
+[TestCleanup()]
+public void TestCleanup() {
+  // Delete Text.txt file
+  if (File.Exists("Test.txt")) {
+    File.Delete("Test.txt");
+  }
+} 
