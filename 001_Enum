@@ -1,7 +1,20 @@
 Enume + clean up the file folder after tests
 
-////file type
-           public enum FileType
+ public static CeiExtractDataPackage GetCeiExcelReport(FileType fileType, string startDate, string endDate, string serviceComponent, int startYy, int startMm, int strtDd, int startHr, int startMn, int startMs, int endYy, int endMm, int endDd, int endHr, int endMn, int endMs)
+	    {
+	        var model = GetCeiReportModel();
+            FileType = fileType,	    
+
+            model.SearchParam = GetSearch(startDate, endDate, serviceComponent, startYy, startMm, strtDd, startHr, startMn, startMs, endYy, endMm, endDd, endHr, endMn, endMs);
+	        return model;
+		}
+			
+call in test case 
+//var ceiReport = GetCeiExcelReport(FileType.excel, startDate, endDate, serviceComponent, startYy, startMm,strtDd,startHr,startMn, startMs, endYy, endMm, endDd,endHr, endMn,endMs);
+
+
+////file type///
+   public enum FileType
     {
         Text,
         Excel,
@@ -9,6 +22,25 @@ Enume + clean up the file folder after tests
     }
  
  ////
+ 
+ /////////
+
+public string getFiletype(FileType filetype)
+{
+string result = string.empty;
+    switch(filetype)
+     {
+     case FileType.Text;
+     break;
+     case FileType.Excel;
+     break;
+     case FileType.Csv;
+     break;
+      }
+      return result; 
+}
+    
+
    
 public static FileType GetFileType(string filetype)
 	    {
