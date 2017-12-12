@@ -1,5 +1,7 @@
 Enume + clean up the file folder after tests
 
+https://stackoverflow.com/questions/18955462/pass-in-an-enum-as-a-method-parameter 
+
  public static CeiExtractDataPackage GetCeiExcelReport(FileType fileType, string startDate, string endDate, string serviceComponent, int startYy, int startMm, int strtDd, int startHr, int startMn, int startMs, int endYy, int endMm, int endDd, int endHr, int endMn, int endMs)
 	    {
 	        var model = GetCeiReportModel();
