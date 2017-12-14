@@ -1,0 +1,96 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+
+namespace abc
+{
+    public class GetDatafromExcel
+    {
+        public static string GetCellValue(string fileName, string sheetName, string addressName)
+        {
+            string value = null;
+
+            // Open the excel
+            using (var document = SpreadsheetDocument.Open(fileName, false))
+            {
+                // Retrieve a reference to the workbook part.
+                var wbPart = document.WorkbookPart;
+
+                // Find the sheet with the supplied name           
+                var theSheet = wbPart.Workbook.Descendants<Sheet>().FirstOrDefault(s => s.Name == sheetName);
+
+                // Throw an exception if there is no sheet.
+                if (theSheet == null)
+                {
+                    throw new ArgumentException("sheetName");
+                }
+
+                // Retrieve a reference to the worksheet part.
+                var wsPart = (WorksheetPart)(wbPart.GetPartById(theSheet.Id));
+
+                // get the cell
+                var theCell = wsPart.Worksheet.Descendants<Cell>().FirstOrDefault(c => c.CellReference == addressName);
+
+                // If the cell does not exist, return an empty string.
+                if (theCell != null)
+                {
+                    value = theCell.InnerText;           
+
+                    if (theCell.DataType != null)
+                    {
+                        switch (theCell.DataType.Value)
+                        {
+                            case CellValues.SharedString:
+
+                                // look up the value in the shared strings table.
+                                var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+
+                                if (stringTable != null)
+                                {
+                                    value = stringTable.SharedStringTable.ElementAt(int.Parse(value)).InnerText;
+                                }
+                                break;
+
+                                
+                            case CellValues.Boolean:
+                                switch (value)
+                                {
+                                    case "0":
+                                        value = "FALSE";
+                                        break;
+                                    default:
+                                        value = "TRUE";
+                                        break;
+                                }
+                                break;
+                                
+                        }
+                    }
+
+                }
+            }
+            return value;
+        }
+
+    }
+}
+
+////////////
+
+ string dmdcDate0 = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "A6");
+            var dmdcDate = DateTime.FromOADate(double.Parse(dmdcDate0)).ToShortDateString();
+            string submissionDate0 = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "B6");
+            var submissionDate = DateTime.FromOADate(double.Parse(submissionDate0)).ToShortDateString();
+            
+             string strExtractedDate = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "A4");
+            
+             Assert.AreEqual($"Date Extracted: {DateTime.Now:MM/dd/yyyy HH:mm:ss}".Replace('-', '/'), strExtractedDate); //extracted date
+            
+run test case 10 seconds later?
+clean up test files after testing
+
+
