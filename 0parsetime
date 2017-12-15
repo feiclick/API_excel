@@ -1,3 +1,33 @@
+
+https://anilkumarlive.wordpress.com/open-xml-excel-update-cell-from-one-excel-to-another-excel-using-c-and-download-replace-excel/
+
+ case CellValues.Date:
+//             {
+//                 DateTime answer = ReleaseDate.AddDays(Convert.ToDouble(cell.CellValue.Text));
+//                 return value = answer.ToShortDateString();
+//             }
+//         case CellValues.Number:
+//             return value = Convert.ToDecimal(cell.CellValue.Text).ToString();
+//         default:
+//             if (cell.CellValue != null)
+//                 return cell.CellValue.Text;
+//             return value = string.Empty;
+
+
+/////////////////
+ 
+ http://www.c-sharpcorner.com/code/3015/how-to-get-the-cell-value-from-the-cell-formula-type-in-openxml-spreadsheet-docu.aspx
+ case CellValues.Date:  
+  
+                    {  
+  
+                        result = thecurrentcell.InnerText;  
+  
+                        break;  
+  
+                    }  
+
+////////////////
 using System;
 using System.Collections.Generic;
 using System.Linq;
