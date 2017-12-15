@@ -1,0 +1,26 @@
+https://www.codeproject.com/Articles/877860/Assert-DateTime-the-Right-Way-MSTest-NUnit-Csharp
+
+DateTime now = DateTime.Now;
+DateTime later = now + TimeSpan.FromHours(1.0);
+
+Assert.That( later. Is.EqualTo(now).Within(TimeSpan.FromHours(3.0));
+Assert.That( later, Is.EqualTo(now).Within(3).Hours;
+
+//////////////
+
+
+https://stackoverflow.com/questions/29674058/comparing-two-calendar-dates-with-each-other
+
+  private bool IsDateInThePast(string inputDate)
+    {
+        DateTime dt = DateTime.Parse(inputDate);
+        return dt.CompareTo(DateTime.Parse(DateTime.Now.ToShortDateString())) < 0;
+    }
+    
+    、、、、、、
+    
+    数值相关匹配符
+
+
+1、assertThat( testedDouble, closeTo( 20.0, 0.5 ) );
+注释：closeTo匹配符表明如果所测试的浮点型数testedDouble在20.0±0.5范围之内则测试通过
