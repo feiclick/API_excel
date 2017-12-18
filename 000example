@@ -1,0 +1,42 @@
+
+        [TestMethod]
+        public void API_Validate_CeiReport_ServiceComponent_ANG()
+        {                
+           
+            //submit  data - -Volunteer
+         ................
+            //generate report
+            Thread.Sleep(500);
+            string serviceComponent = "xxxxxxxx";
+            string serviceComponentId = "11111111";//ANG
+
+            string filepath = downLoadPath + "CEI_Extract_" + DateTime.Now.ToString("MM/dd/yyyy_hhmmssms") + ".xlsx";
+            restRequestReport.RequestFormat = DataFormat.Json;
+
+            var ceiReport = GetCeiExcelReport(FileType.Excel, SelectedStartDate, SelectedEndDate, serviceComponent, StartYy, StartMm, StrtDd, StartHr, StartMn, StartSs, EndYy, EndMm, EndDd, EndHr, EndMn, EndSs, serviceComponentId);
+            var json2 = restRequestReport.JsonSerializer.Serialize(ceiReport);
+            restRequestReport.AddParameter("application/json; charset=utf-8", json2, ParameterType.RequestBody);
+
+            restClient.Execute(restRequestReport);
+            byte[] response = restClient.DownloadData(restRequestReport);
+
+            File.WriteAllBytes(filepath, response);
+
+            // Retrieve value           
+            string strStartDate = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "A1");
+            string strEndDate = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "A2");
+            string strComponent = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "A3");
+            string strExtractedDate = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "A4");
+            string serviceComponentValue = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "E6");
+            string employmentStatus = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "H6");       
+
+
+            //assert
+            Assert.AreEqual("Report Start Date: " + SelectedStartDate, strStartDate);
+            Assert.AreEqual("Report End Date: " + SelectedEndDate, strEndDate);
+            Assert.AreEqual("Service Component: " + serviceComponentValue, strComponent);         
+            Assert.AreEqual($"Date Extracted: {DateTime.Now:MM/dd/yyyy HH:mm}".Replace('-', '/'), strExtractedDate.Remove(strExtractedDate.Length - 3));
+            Assert.AreEqual("Air National Guard", serviceComponentValue);
+            Assert.AreEqual("Voluntary Service", employmentStatus);         
+            
+        }
