@@ -1,0 +1,45 @@
+ //////////
+ public static void AssertValue (string A1)
+        {
+            Assert.AreEqual("TestB", A1);
+            //Assert.AreEqual("TestB", B1);
+           // Assert.AreEqual("TestC", C1);
+
+
+        }
+
+         public static string GetValue()
+        {
+              
+             string A1 = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "A1");
+            // string B1 = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "B1");
+            // string C1 = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "C1");
+
+            return A1;
+        }
+        ---------------------
+            [TestMethod]
+        public void TestMethod1()
+        {
+
+            // var datatable = ReadCsv(filepath);
+
+            //string GetRow(,3)
+
+            string a = TestHepler.GetValue();
+            TestHepler.AssertValue(a);
+
+
+        }
+        
+      -------------------------  
+        /////////Tuple///////
+        public static Tuple <string, string> GetValue()
+        {
+              
+             string A1 = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "A1");
+             string B1 = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "B1");
+            // string C1 = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "C1");
+
+            return Tuple.Create(A1,B1);
+        }
