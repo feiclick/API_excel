@@ -43,3 +43,25 @@
 
             return Tuple.Create(A1,B1);
         }
+
+///////////
+ public static void GetValue()
+        {
+            
+            string[] arr = new string[20];
+           
+            arr[0] = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "A1");
+            arr[1] = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "B1");
+            arr[2] = GetDatafromExcel.GetCellValue(filepath, "Sheet1", "C1");
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                string s = arr[i];
+                AssertValue(s);
+            }
+          
+
+            // return value;
+
+        }
+        ///////
