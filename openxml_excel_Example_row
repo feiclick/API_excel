@@ -1,0 +1,103 @@
+http://openxmldeveloper.org/discussions/development_tools/f/35/t/2670.aspx
+
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace readCSV
+{
+   public class GetRowData
+    {
+
+        public static List<ExpandoObject> GetRowValue(string sheetName, string filepath)
+        {
+            //string fileName,
+            //string value = null;
+
+
+            List<ExpandoObject> data = new List<ExpandoObject>();
+
+            // Open the excel
+            using (var document = SpreadsheetDocument.Open(filepath, false))
+            {
+                // Retrieve a reference to the workbook part.
+                var wbPart = document.WorkbookPart;
+                //var wbPart1 = worksheet;
+
+                IEnumerable<Sheet> sheets = document.WorkbookPart.Workbook.Descendants<Sheet>().Where(s => s.Name == filepath);
+                WorksheetPart worksheetPart = (WorksheetPart)document.WorkbookPart.GetPartById(sheets.First().Id);
+                Worksheet worksheet = worksheetPart.Worksheet;
+                SharedStringTablePart sstPart = document.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
+                SharedStringTable ssTable = sstPart.SharedStringTable;
+
+                WorkbookStylesPart workbookStylesPart = document.WorkbookPart.GetPartsOfType<WorkbookStylesPart>().First();
+                CellFormats cellFormats = (CellFormats)workbookStylesPart.Stylesheet.CellFormats;
+
+            }
+            return data;
+
+
+        }
+
+        private static void ExtractRowsData(List<ExpandoObject> data, Worksheet worksheet, SharedStringTable ssTable, CellFormats cellFormats)
+        {
+            var columnHeaders = worksheet.Descendants<Row>().First().Descendants<Cell>().Select(c => Convert.ToString(ProcessCellValue(c, ssTable, cellFormats))).ToArray();
+            var columnHeadersCellReference = worksheet.Descendants<Row>().First().Descendants<Cell>().Select(c => c.CellReference.InnerText.Replace("1", string.Empty)).ToArray();
+            var spreadsheetData = from row in worksheet.Descendants<Row>()
+                                  where row.RowIndex > 1
+                                  select row;
+
+            foreach (var dataRow in spreadsheetData)
+            {
+                dynamic row = new ExpandoObject();
+                Cell[] rowCells = dataRow.Descendants<Cell>().ToArray();
+                for (int i = 0; i < columnHeaders.Length; i++)
+                {
+                    // Find and add the correct cell to the row object
+                    Cell cell = dataRow.Descendants<Cell>().Where(c => c.CellReference == columnHeadersCellReference[i] + dataRow.RowIndex).FirstOrDefault();
+                    if (cell != null)
+                        ((IDictionary<String, Object>)row).Add(new KeyValuePair<String, Object>(columnHeaders[i], ProcessCellValue(cell, ssTable, cellFormats)));
+                }
+                data.Add(row);
+            }
+        }
+        static Func<Cell, SharedStringTable, CellFormats, Object> ProcessCellValue = (c, ssTable, cellFormats) =>
+        {
+            // If there is no data type, this must be a string that has been formatted as a number
+            if (c.DataType == null)
+            {
+                CellFormat cf = cellFormats.Descendants<CellFormat>().ElementAt<CellFormat>(Convert.ToInt32(c.StyleIndex.Value));
+                if (cf.NumberFormatId >= 0 && cf.NumberFormatId <= 13) // This is a number
+                    return Convert.ToDecimal(c.CellValue.Text);
+                else if (cf.NumberFormatId >= 14 && cf.NumberFormatId <= 22) // This is a date
+                    return DateTime.FromOADate(Convert.ToDouble(c.CellValue.Text));
+                else
+                    return c.CellValue.Text;
+            }
+
+            switch (c.DataType.Value)
+            {
+                case CellValues.SharedString:
+                    return ssTable.ChildElements[Convert.ToInt32(c.CellValue.Text)].InnerText;
+                case CellValues.Boolean:
+                    return c.CellValue.Text == "1" ? true : false;
+                case CellValues.Date:
+                    return DateTime.FromOADate(Convert.ToDouble(c.CellValue.Text));
+                case CellValues.Number:
+                    return Convert.ToDecimal(c.CellValue.Text);
+                default:
+                    if (c.CellValue != null)
+                        return c.CellValue.Text;
+                    return string.Empty;
+            }
+        };
+
+    }
+
+        
+}
