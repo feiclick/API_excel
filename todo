@@ -74,3 +74,32 @@ new:
             }
             
             
+            
+    ----        
+        [TestMethod]
+        public void GenerateReport_ValidateFullTimeEmployementType()
+        {
+            string[] expectedValues = GetDataExpectedValues();
+            // Date
+            expectedValues[0] = "aaa";
+
+            var actualValues = GetDataExcelRow(2);
+            CollectionAssert.AreEqual(expectedValues, actualValues);
+        }
+
+        private static string[] GetDataExpectedValues()
+        {
+            var expectedValues = new []
+            {
+                //expected value - headings   
+
+            "aa"
+            "bbb"
+            " ccc"
+            };
+            return expectedValues;
+        }
+
+            
+           
+           
