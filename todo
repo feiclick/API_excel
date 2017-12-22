@@ -1,1 +1,73 @@
 https://www.dotnetperls.com/datarow
+
+old:
+
+
+        public static void CollectionAssert_Excel()
+        {
+
+            var expectedExcelValue = new List<string>
+            {  //expectedvalue
+            "aaa"
+            "bbb"
+            ...
+            };
+            
+             var actualExcelValue = new List<string>
+            {
+                GetDatafromExcel.GetCellValue(ExcelFilepath, "Sheet1", "A1"), //strStartDate
+                GetDatafromExcel.GetCellValue(ExcelFilepath, "Sheet1", "A2"), //strEndDate
+                GetDatafromExcel.GetCellValue(ExcelFilepath, "Sheet1", "A3"), //strComponent
+                strExtractedDate.Remove(strExtractedDate.Length - 3),
+                .......
+                };
+
+ //Assert
+            CollectionAssert.AreEqual(expectedExcelValue, actualExcelValue);
+
+        }
+
+
+        public static void CollectionAssert_Csv()
+        {
+
+            var expectedCsvValue = new List<string>
+            {  
+                //expected value - headings    
+                "aaaa",
+                "bbbb",
+                ...};
+                
+                 var csv = new GetDatafromCsv();
+            csv.FileOpen(CsvFilePath);
+
+                   var actualCsvValue = new List<string>
+            
+            {
+                 csv.Rows[0][0], //aaaa 
+                 csv.Rows[0][1],  //bbb 
+                 csv.Rows[0][2], //ccc
+                 ....
+                 };
+
+   //Assert
+            CollectionAssert.AreEqual(expectedCsvValue, actualCsvValue);
+            
+            }
+
+
+new:
+
+
+ public static List<string> GetDataExcelRow(int row)
+        {
+            string FTsubmissionDate0 = GetDatafromExcel.GetCellValue(ExcelFilepath, "Sheet1", $"B{row}");
+            string FTserviceComponentValue = GetDatafromExcel.GetCellValue(ExcelFilepath, "Sheet1", $"E{row}");
+            ...........
+            
+            
+            return new List<string>
+            {};
+            }
+            
+            
