@@ -55,6 +55,9 @@ old:
             
             }
 
+date:
+ string PTsubmissionDate0 = GetDatafromExcel.GetCellValue(ExcelFilepath, "Sheet1", "B7");
+//            var PTsubmissionDate = DateTime.FromOADate(Double.Parse(PTsubmissionDate0)).ToShortDateString();
 
 new:
 
