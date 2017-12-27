@@ -1,0 +1,33 @@
+  public static List<string> GetvalueExcelRow(int row)
+	    {
+	        var retlist = new List<string>();
+	        string[] stringArray = new string[] {"A","C","D","E","F","G","H","I","J","K","N","O","P","Q","R","S","T"};
+    
+	        for (int i = 0; i < stringArray.Length; i++)
+	        {
+	            string s = stringArray[i];
+	            retlist.Add(GetDatafromExcel.GetCellValue(ExcelFilepath, "Sheet1", $"{s}{row}"));
+	            
+                string [] stringArray2 = new string[]{"B", "L", "M"};
+                string datetime0 = GetDatafromExcel.GetCellValue(ExcelFilepath, "Sheet1", $"{s}{row}");
+	            var datetime = DateTime.FromOADate(Double.Parse(datetime0)).ToShortDateString();
+
+                retlist.Add(datetime);
+
+	            /*
+                   case CellValues.Date:
+                                var date = wbPart.GetPartsOfType<DateTimeItem>().ToString();
+                if (date != null)
+                {
+                    value = DateTime.FromOADate(Double.Parse(value)).ToShortDateString();
+                }
+                break;
+                */
+	        }
+            return retlist;
+
+	    }
+      
+      ////
+        CollectionAssert.AreEqual(expectedvalueExcel, GetvalueExcelRow(6));
+        
